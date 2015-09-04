@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServlet;
 import ru.dart.consumesproduces.model.IReportService;
 import ru.dart.consumesproduces.model.ReportService;
 
-@WebServlet(urlPatterns = { "/*" }, loadOnStartup = 1)
+@WebServlet(urlPatterns = { "/report" }, loadOnStartup = 1)
 public class ReportServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;

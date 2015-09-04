@@ -1,7 +1,9 @@
 package ru.dart.consumesproduces.model;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.naming.NamingException;
 
@@ -19,20 +21,29 @@ public class ReportService implements IReportService {
     public Collection<ReportRecord> createReportByRegion(String region) {
 	Collection<Consumer> consumers = dao.getConsumerByRegion(region);
 	Collection<Producer> producers = dao.getProducerByRegion(region);
+	List<ReportRecord> results = new ArrayList<ReportRecord>();
 	for (Consumer cons : consumers) {
-	    for (Offerts offert : cons.getOfferts()) {
-		Producer producer = findProductProducer(producers,
-			offert.getProduct());
-		ReportRecord rec = new ReportRecord();
+	    for (Needs need : cons.getNeeds()) {
+		Collection<Producer> suitableProducers = findProductProducers(
+			producers, need.getProduct());
+		for (Producer prod : suitableProducers) {
+		    results.add(new ReportRecord(region, need.getProduct(),
+			    prod, cons));
+		}
 	    }
 	}
-	return null;
+	return results;
     }
 
-    private Producer findProductProducer(Collection<Producer> producers,
-	    Product product) {
-
-	return null;
+    private Collection<Producer> findProductProducers(
+	    Collection<Producer> producers, Product product) {
+	Collection<Producer> result = new ArrayList<Producer>();
+	for (Producer producer : producers) {
+	    if (!producer.getOffertsByProduct(product).isEmpty()) {
+		result.add(producer);
+	    }
+	}
+	return result;
     }
 
 }
