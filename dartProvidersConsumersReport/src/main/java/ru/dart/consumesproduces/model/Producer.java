@@ -12,6 +12,19 @@ public class Producer {
 
     private Collection<Offerts> offerts;
 
+    public Producer(Address address, String title) {
+	super();
+	this.address = address;
+	this.title = title;
+    }
+
+    public Producer(Address address, String title, Collection<Offerts> offerts) {
+	super();
+	this.address = address;
+	this.title = title;
+	this.offerts = offerts;
+    }
+
     public Producer() {
     }
 

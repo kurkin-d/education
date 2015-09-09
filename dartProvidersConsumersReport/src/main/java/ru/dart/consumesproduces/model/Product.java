@@ -4,6 +4,11 @@ public class Product {
 
     private String title;
 
+    public Product(String title) {
+	super();
+	this.title = title;
+    }
+
     public Product() {
     }
 

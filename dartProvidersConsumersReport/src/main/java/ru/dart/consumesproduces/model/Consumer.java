@@ -12,6 +12,19 @@ public class Consumer {
 
     private Collection<Needs> needs;
 
+    public Consumer(String title, Address address, Collection<Needs> needs) {
+	super();
+	this.title = title;
+	this.address = address;
+	this.needs = needs;
+    }
+
+    public Consumer(String title, Address address) {
+	super();
+	this.title = title;
+	this.address = address;
+    }
+
     public Consumer() {
     }
 
