@@ -2,7 +2,9 @@ package ru.dart.consumesproduces.dao;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -11,7 +13,10 @@ import javax.sql.DataSource;
 
 import ru.dart.consumesproduces.model.Address;
 import ru.dart.consumesproduces.model.Consumer;
+import ru.dart.consumesproduces.model.Needs;
+import ru.dart.consumesproduces.model.Offerts;
 import ru.dart.consumesproduces.model.Producer;
+import ru.dart.consumesproduces.model.Product;
 
 public class DaoImpl implements IDAO {
 
@@ -29,18 +34,41 @@ public class DaoImpl implements IDAO {
     }
 
     public Collection<Producer> getProducerByRegion(String regionCode) {
-	// TODO Auto-generated method stub
-	return null;
+	// TODO
+	List<Offerts> offerts = new ArrayList<Offerts>();
+	offerts.add(new Offerts(new Product("мясо"), 150));
+	offerts.add(new Offerts(new Product("молоко"), 2000));
+	List<Producer> tmpResult = new ArrayList<Producer>();
+	tmpResult.add(new Producer(
+		new Address(regionCode, "town", "street", 10), "ИП ГАЗМЯС",
+		offerts));
+	tmpResult.add(new Producer(
+		new Address(regionCode, "town", "street", 10), "ИП ГАЗМЯС",
+		offerts));
+	return tmpResult;
     }
 
     public Collection<Consumer> getConsumerByRegion(String regionCode) {
-	// TODO Auto-generated method stub
-	return null;
+	// TODO
+	List<Needs> needs = new ArrayList<Needs>();
+	needs.add(new Needs(new Product("мясо"), 150));
+	needs.add(new Needs(new Product("молоко"), 2000));
+	List<Consumer> tmpResult = new ArrayList<Consumer>();
+	tmpResult.add(new Consumer("магаз у петровича", new Address(regionCode,
+		"town", "street", 7), needs));
+	tmpResult.add(new Consumer("магаз у петровича", new Address(regionCode,
+		"town", "street", 7), needs));
+	return tmpResult;
     }
 
     public Collection<Address> getAllAddress() {
-	// TODO Auto-generated method stub
-	return null;
+	// TODO
+	List<Address> tmpResult = new ArrayList<Address>();
+	tmpResult.add(new Address("Moscow", "town", "street", 10));
+	tmpResult.add(new Address("Moscow", "town", "street", 7));
+	tmpResult.add(new Address("Voronezh", "town", "street", 10));
+	tmpResult.add(new Address("Voronezh", "town", "street", 7));
+	return tmpResult;
     }
 
 }

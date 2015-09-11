@@ -9,7 +9,7 @@
 </head>
 <body>
 	<h2>Отчёт по регионам</h2>
-	<a href="main">На главную</a>
+	<a href="">На главную</a>
 	<table border="1" style="width:100%">
 		<tr>
 			<th>Регион</th>

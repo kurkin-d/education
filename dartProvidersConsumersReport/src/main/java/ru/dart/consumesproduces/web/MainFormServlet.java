@@ -10,7 +10,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 
-@WebServlet(urlPatterns = { "/index.jsp", "main" }, loadOnStartup = 1)
+@WebServlet(urlPatterns = { "/index.jsp" }, loadOnStartup = 1)
 public class MainFormServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
