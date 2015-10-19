@@ -7,6 +7,12 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>dartProvidersConsumersReport Maven Webapp</name>
   <url>http://maven.apache.org</url>
+  
+  
+
+
+
+  
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -18,16 +24,28 @@
 		<groupId>jstl</groupId>
 		<artifactId>jstl</artifactId>
 		<version>1.2</version>
+		<scope>provided</scope>
 	</dependency>
 	<dependency>
-	<groupId>javax.servlet</groupId>
-	<artifactId>javax.servlet-api</artifactId>
-	<version>3.1.0</version>
+		<groupId>javax.servlet</groupId>
+		<artifactId>javax.servlet-api</artifactId>
+		<version>3.1.0</version>
 	<scope>provided</scope>
 </dependency>
 	
   </dependencies>
   <build>
     <finalName>dartProvidersConsumersReport</finalName>
+    <plugins>
+    	<plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.2</version>
+        <configuration>
+            <source>1.8</source>
+            <target>1.8</target>
+        </configuration>
+    </plugin>
+    </plugins>
   </build>
 </project>

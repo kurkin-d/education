@@ -2,6 +2,7 @@ package ru.dart.consumesproduces.web;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -12,6 +13,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 
+import ru.dart.consumesproduces.dao.DaoException;
 import ru.dart.consumesproduces.model.IReportService;
 import ru.dart.consumesproduces.model.ReportRecord;
 import ru.dart.consumesproduces.model.ReportService;
@@ -31,21 +33,31 @@ public class ReportServlet extends HttpServlet {
     public void service(ServletRequest req, ServletResponse resp)
 	    throws ServletException, IOException {
 	System.out.println(Arrays.toString(req.getParameterValues("region")));
-	String region = req.getParameter("region");
+	// String region = req.getParameter("region");
 
-	Collection<ReportRecord> report = service.createReportByRegion(region);
+	try {
+	    Collection<ReportRecord> report = new ArrayList<ReportRecord>();
+	    for (String region : req.getParameterValues("region")) {
+		report.addAll(service.createReportByRegion(region));
+	    }
 
-	// List<ReportRecord> report = new ArrayList<ReportRecord>();
-	// report.add(new ReportRecord(region, new Product("мясо"), new
-	// Producer(
-	// new Address(region, "town", "street", 10), "ИП ГАЗМЯС"),
-	// new Consumer("магаз у петровича", new Address(region, "town",
-	// "street", 7))));
-	// report.add(new ReportRecord(region, new Product("молоко"),
-	// new Producer(new Address(region, "town", "street", 10),
-	// "ИП ГАЗМЯС"), new Consumer("магаз у петровича",
-	// new Address(region, "town", "street", 7))));
-	req.setAttribute("reportData", report);
-	req.getRequestDispatcher("/pages/ReportForm.jsp").forward(req, resp);
+	    // List<ReportRecord> report = new ArrayList<ReportRecord>();
+	    // report.add(new ReportRecord(region, new Product("мясо"), new
+	    // Producer(
+	    // new Address(region, "town", "street", 10), "ИП ГАЗМЯС"),
+	    // new Consumer("магаз у петровича", new Address(region, "town",
+	    // "street", 7))));
+	    // report.add(new ReportRecord(region, new Product("молоко"),
+	    // new Producer(new Address(region, "town", "street", 10),
+	    // "ИП ГАЗМЯС"), new Consumer("магаз у петровича",
+	    // new Address(region, "town", "street", 7))));
+	    req.setAttribute("reportData", report);
+	    req.getRequestDispatcher("/pages/ReportForm.jsp")
+		    .forward(req, resp);
+
+	} catch (DaoException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
     }
 }

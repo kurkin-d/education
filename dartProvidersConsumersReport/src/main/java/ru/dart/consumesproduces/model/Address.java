@@ -12,6 +12,7 @@ public class Address {
 
     public Address(String region, String town, String street, int houseNumber) {
 	super();
+
 	this.region = region;
 	this.town = town;
 	this.street = street;

@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.naming.NamingException;
 
+import ru.dart.consumesproduces.dao.DaoException;
 import ru.dart.consumesproduces.dao.DaoImpl;
 import ru.dart.consumesproduces.dao.IDAO;
 
@@ -18,7 +19,9 @@ public class ReportService implements IReportService {
 	dao = new DaoImpl();
     }
 
-    public Collection<ReportRecord> createReportByRegion(String region) {
+    @Override
+    public Collection<ReportRecord> createReportByRegion(String region)
+	    throws DaoException {
 	Collection<Consumer> consumers = dao.getConsumerByRegion(region);
 	Collection<Producer> producers = dao.getProducerByRegion(region);
 	List<ReportRecord> results = new ArrayList<ReportRecord>();
