@@ -28,16 +28,12 @@ public class MainFormServlet extends HttpServlet {
     @Override
     public void service(ServletRequest req, ServletResponse res)
 	    throws ServletException, IOException {
-	// List<String> regions = new ArrayList<String>();
-	// regions.add("Moscow");
-	// regions.add("Voronezh");
-	//
 	try {
 	    req.setAttribute("regions", dao.getRegionsNames());
 	    req.getRequestDispatcher("/pages/MainForm.jsp").forward(req, res);
 	} catch (DaoException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    req.setAttribute("exception", e);
+	    req.getRequestDispatcher("/pages/error.jsp").forward(req, res);
 	}
 
     }
