@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <ehcache>
+  <defaultCache maxElementsInMemory="500" eternal="true"
+    overflowToDisk="false" memoryStoreEvictionPolicy="LFU" />
+  <cache name="saga" maxElementsInMemory="0" eternal="true"
+    overflowToDisk="false" memoryStoreEvictionPolicy="LFU" />
+  <cache name="sagaAssociation" maxElementsInMemory="0" eternal="true"
+    overflowToDisk="false" memoryStoreEvictionPolicy="LFU" />
+  </ehcache>

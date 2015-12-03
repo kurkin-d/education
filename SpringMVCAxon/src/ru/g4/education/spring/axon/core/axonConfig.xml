@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:axon="http://www.axonframework.org/schema/core"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans        
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.axonframework.org/schema/core 
+      http://www.axonframework.org/schema/axon-core-2.0.xsd
+      http://www.springframework.org/schema/tx
+      http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+      http://www.springframework.org/schema/cache
+      http://www.springframework.org/schema/cache/spring-cache.xsd
+      http://www.springframework.org/schema/context
+	  http://www.springframework.org/schema/context/spring-context-3.0.xsd">	
+    
+    
+    
+    <context:component-scan base-package="ru.g4.education.spring.axon" />
+    
+    <bean id="tagEventListener" class="ru.g4.education.spring.axon.TagEventListener"/>  
+    
+    <bean id="errorGenerateListener" class="ru.g4.education.spring.axon.EventLIstenerErrorTest">
+    	<property name="commandBus" ref="commandBus" />
+    </bean> 
+    
+    <bean  class="org.axonframework.eventhandling.annotation.AnnotationEventListenerBeanPostProcessor">
+    	<property name="eventBus" ref="eventBus"/>
+    </bean>
+    
+    <bean id="eventBus" class="org.axonframework.eventhandling.SimpleEventBus"/>
+    
+    
+    
+    <!-- <bean id="tagCmdHandler" class="ru.g4.education.spring.axon.TagCmdHandler">
+    	<constructor-arg name="repo" ref="TagRepository"/>
+    </bean>
+    <bean id="alarmCmdHandler" class="ru.g4.education.spring.axon.AlarmCmdHandler">
+    	<constructor-arg name="repo" ref="AlarmRepository"/>
+    </bean>
+     -->
+    
+    <bean class="org.axonframework.commandhandling.annotation.AnnotationCommandHandlerBeanPostProcessor">
+    	<property name="commandBus" ref="commandBus"/>
+    </bean>
+    
+    <bean id="commandBus" class="org.axonframework.commandhandling.SimpleCommandBus">
+    	<property name="transactionManager" ref="axonTransactionManager"/>
+    </bean>
+    
+    <bean id="TagRepository" class="org.axonframework.repository.GenericJpaRepository">
+    	<constructor-arg name="entityManagerProvider" ref="emProvider"/>
+    	<constructor-arg name="aggregateType" value="ru.g4.education.spring.axon.TagAggr"/>
+    	<property name="eventBus" ref="eventBus"/>
+	</bean>
+	
+	 <bean id="AlarmRepository" class="org.axonframework.repository.GenericJpaRepository">
+    	<constructor-arg name="entityManagerProvider" ref="emProvider"/>
+    	<constructor-arg name="aggregateType" value="ru.g4.education.spring.axon.AlarmAggr"/>
+    	<property name="eventBus" ref="eventBus"/>
+	</bean>
+    
+    
+    <bean class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
+        <property name="commandBus" ref="commandBus"/>
+    </bean>
+    
+   <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+   
+   <bean id="emProvider" class="ru.g4.education.spring.axon.core.ContainerManagedEntityManagerProvider"/> 
+    
+    <bean id="aggrDataSource" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+    	<property name="persistenceUnitName" value="axonSpringAggr"/>
+    </bean>
+    
+    <bean id="readModeDataSource" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+    	<property name="persistenceUnitName" value="axonSpringReadModel"/>
+    </bean>
+    
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+    	<property name="entityManagerFactory" ref="aggrDataSource" />
+  	</bean>
+  	
+  	 <bean id="readModelTsManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+    	<property name="entityManagerFactory" ref="readModeDataSource" />
+  	</bean>
+  	
+  	<bean id="axonTransactionManager" class="org.axonframework.unitofwork.SpringTransactionManager">
+  		<constructor-arg name="transactionManager" ref="transactionManager"/>
+  	</bean>
+  	
+  	<axon:saga-manager id="sagaManager" saga-repository="sagaRepository">
+    	<!-- <axon:async executor="taskExecutor" transaction-manager="transactionManager" /> -->
+    	<axon:types>
+        	ru.g4.education.spring.axon.AlarmSaga
+    	</axon:types>
+	</axon:saga-manager>
+	
+	<axon:jpa-saga-repository id="sagaRepository"  entity-manager-provider="emProvider"
+                          use-explicit-flush="true">
+		<axon:cache-config saga-cache="sagaCache" associations-cache="sagaAssociationCache" />
+    </axon:jpa-saga-repository>       
+    
+    <bean id="myEhCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+    	<property name="configLocation" value="classpath:ru/g4/education/spring/axon/core/ehcache.xml"/>
+	</bean>
+	
+	
+    
+    
+    <bean id="sagaAssociationCache" class="net.sf.ehcache.jcache.JCache">
+    	<constructor-arg name="cache" value='#{myEhCacheManager.getCache("sagaAssociation")}'/>
+    </bean> 
+    
+    
+    <bean id="sagaCache" class="net.sf.ehcache.jcache.JCache">
+    	<constructor-arg name="cache" value='#{myEhCacheManager.getCache("saga")}'/>
+    </bean>             
+  	
+  	<tx:annotation-driven transaction-manager="transactionManager"/>
+      
+</beans>

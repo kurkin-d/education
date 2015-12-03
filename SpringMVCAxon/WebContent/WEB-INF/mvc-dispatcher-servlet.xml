@@ -1,0 +1,47 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd      
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+        http://www.springframework.org/schema/websocket
+        http://www.springframework.org/schema/websocket/spring-websocket.xsd">
+
+	<context:component-scan base-package="com.javacodegeeks.snippets.enterprise,ru.g4.education.spring.axon.web" />
+
+	<mvc:resources mapping="/res/**" location="/res/" />
+	<mvc:annotation-driven/>
+	
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix">
+			<value>/WEB-INF/views/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+	
+	 <websocket:handlers>
+        <websocket:mapping path="/ws/tags" handler="myHandler" />
+        <websocket:handshake-handler ref="handshakeHandler"/>
+    </websocket:handlers>
+
+	<bean id="handshakeHandler" class="org.springframework.web.socket.server.support.DefaultHandshakeHandler">
+        <constructor-arg ref="upgradeStrategy"/>
+    </bean>
+
+    <bean id="upgradeStrategy" class="org.springframework.web.socket.server.standard.TomcatRequestUpgradeStrategy">
+    </bean>
+
+    <bean id="myHandler" class="ru.g4.education.spring.axon.web.TagWebSocketHandler"/>	
+
+</beans>
+
+
+

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="windows-1251"?>
+
+<!-- Задаем имя проекта, задание по умолчанию и корневую папку  -->
+<project name="SpringMVCAxon" default="build" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+
+ <description>Typical ant build-file for lib-projects</description>
+
+ <!-- переменные ниже универсальны для большинства проектов   -->
+
+ <!-- имя Папки исходников   -->
+ <property name="src.dir" value="src" />
+
+ <!-- имя папки скомпилированных классов   -->
+ <property name="build.dest" value="classes" />
+	
+ <!-- место Папки для тестов   -->
+ <property name="test.dir" location="./" />
+	
+ <!-- имя Папки для тестов   -->
+ <property name="test.src.dir" value="test" />
+	
+ <!-- имя Папки для джавадока   -->
+ <property name="doc.dir" value="javadoc" />
+	
+ <!-- имя Папки публикаций   -->
+ <property name="ivy.distrib.dir" value="distrib" />
+
+ <!-- имя папки lib   -->
+ <property name="retrieve.dest" value="WebContent/WEB-INF/lib" />
+
+ <!-- имя Папки для релиза   -->
+ <property name="publish.dest" value="${ivy.distrib.dir}" />
+
+ <!-- версия в репозитарии  -->
+ <property name="rev.num" value="1.7" />
+
+ <!-- имя джарки  -->
+ <property name="jar.name" value="${ant.project.name}-${rev.num}" />
+ 
+
+ <!-- имя war  -->
+ <property name="war.name" value="${ant.project.name}-${rev.num}" />
+
+ <!-- имя основной джарки проекта   -->
+ <property name="build.jar.name" value="${publish.dest}/jars/${jar.name}.jar" />
+ 
+ <!-- имя основной war проекта   -->
+  <property name="build.war.name" value="${publish.dest}/wars/${war.name}.war" />
+
+
+ <!-- имя системного свойства   -->
+
+ <property environment="env" />
+
+ <tstamp>
+  	<!-- имя и настройка переменной времени сборки   -->
+  	<format property="build.time" pattern="yyyyMMddHHmm" />
+ </tstamp>
+
+
+
+ <!-- или имя пользователя, который собрал проект или номер сборки в хадсоне  -->
+ <property name="env.BUILD_NUMBER" value="${user.name}" />
+
+ <!-- номер свн коммита (если в хадсоне) или local   -->
+ <property name="env.SVN_REVISION_1" value="local" />
+
+ <!-- полное имя билда  -->
+ <property name="build.stamp" value="${env.SVN_REVISION_1}-${env.BUILD_NUMBER}-${build.time}" />
+
+ <!--  Classpath для компилирования   -->
+ <path id="project.class.path">
+  <pathelement location="${build.dest}" />
+  <fileset dir="${retrieve.dest}">
+   	<include name="*.jar" />
+  </fileset>
+ </path>
+
+ <!-- удаляет временные папки  -->
+ <target name="clean" description="clean up">
+  <delete dir="${build.dest}" />
+  <delete dir="${publish.dest}" />
+  <delete dir="${retrieve.dest}" />
+  <delete>
+   <fileset file="./*.jar" />
+  </delete>
+ </target>
+
+
+ <!-- задание создает папку билд  -->
+ <target name="init" depends="clean">
+  <mkdir dir="${build.dest}" />
+  <tstamp prefix="build" />
+ </target>
+
+
+ <target name="retrieve" depends="init">
+  <ivy:resolve conf="default" />
+  <ivy:retrieve pattern="${retrieve.dest}/[artifact]-[revision](-[classifier]).[ext]" />
+ </target>
+
+
+
+ <!-- компилирует исходники и тесты  -->
+
+ <target name="compile" depends="retrieve">
+  <javac destdir="${build.dest}" target="1.7" debug="on" includeantruntime="true" encoding="windows-1251">
+   <src path="${src.dir}" />
+
+   <classpath refid="project.class.path" />
+  </javac>
+
+  <copy todir="${build.dest}">
+   <fileset dir="${src.dir}" excludes="**/*.java" />
+  </copy>
+
+ </target>
+
+
+
+ <!-- Создание билда проекта   -->
+
+ <target name="build" depends="compile">
+
+  <jar destfile="${build.jar.name}" basedir="${build.dest}" compress="true" excludes="**/*Test.*">
+   <manifest>
+
+    <section name="version">
+     <attribute name="build-timestamp" value="${build.time}" />
+     <attribute name="build-user" value="${user.name}" />
+     <attribute name="build-id" value="${build.version}" />
+     <attribute name="build-revision" value="${env.SVN_REVISION_1}" />
+     <attribute name="artifact-revision" value="${rev.num}" />
+    </section>
+
+   </manifest>
+  </jar>
+ </target>
+
+
+
+ <!-- Создание билда проекта   -->
+
+ <target name="war" depends="build">
+
+  <war destfile="${build.war.name}" webxml="WebContent/WEB-INF/web.xml">
+
+   <fileset dir="WebContent">
+
+    <include name="**/*.*" />
+
+  </fileset>
+   
+   <classes dir="${build.dest}" />
+
+  </war>
+
+ </target>
+
+
+
+ <target name="publish-local" depends="war">
+  <ivy:publish overwrite="true" resolver="local" />
+ </target>
+
+ <target name="publish-shared" depends="war">
+  <ivy:publish overwrite="true" resolver="shared" />
+ </target>
+ 
+</project>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="UTF8converter" default="convertFromToUTF8" basedir=".">
+    <description>Конвертер java файлов в java файлы с кодировкой UTF-8</description>
+    
+    <!-- имя кодировки исходных файлов -->
+    <property name="src.encoding" value="Cp1251" />
+    
+    <!-- имя Папки исходников -->
+    <property name="src.dir" value="src" />
+    
+    <!-- имя Папки для тестов -->
+    <property name="test.src.dir" value="test" />
+
+    <target name="convertFromToUTF8" description="Ковертировать исходные java файлы в UTF-8">
+        <mkdir dir="${src.dir}temp" />
+        <copy todir="${src.dir}temp" encoding="${src.encoding}" outputencoding="UTF-8">
+            <fileset dir="${src.dir}" includes="**/*.java" />
+        </copy>
+        <copy todir="${src.dir}" overwrite="true" force="true" >
+            <fileset dir="${src.dir}temp" includes="**/*.java" />
+        </copy>
+        <delete dir="${src.dir}temp" /> 
+
+        <mkdir dir="${test.src.dir}temp" />
+        <copy todir="${test.src.dir}temp" encoding="${src.encoding}" outputencoding="UTF-8">
+            <fileset dir="${test.src.dir}" includes="**/*.java" />
+        </copy>
+        <copy todir="${test.src.dir}" overwrite="true" force="true">
+            <fileset dir="${test.src.dir}temp" includes="**/*.java" />
+        </copy>
+        <delete dir="${test.src.dir}temp" />
+    </target>
+
+</project>

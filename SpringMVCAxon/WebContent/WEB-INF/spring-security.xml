@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns="http://www.springframework.org/schema/security"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+        http://www.springframework.org/schema/security 
+        http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+
+	<http auto-config="true">
+		<form-login/>
+		<http-basic />
+		<intercept-url pattern="/**" access="ROLE_AXON" />
+	</http>
+
+	<authentication-manager>
+		<authentication-provider user-service-ref="userService" />
+	</authentication-manager>
+
+	<user-service id="userService">
+		<user name="axon" password="123" authorities="ROLE_AXON"/>
+	</user-service>
+
+</beans:beans>
