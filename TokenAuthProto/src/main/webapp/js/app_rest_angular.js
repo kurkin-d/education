@@ -165,13 +165,13 @@ function EditController($scope,  $stateParams, $location, NewsService) {
 
 function CreateController($scope, $location, NewsService) {
 
-    /*$scope.newsEntry = new NewsService();
+    $scope.newsEntry = {};
 
     $scope.save = function() {
-        $scope.newsEntry.$save(function() {
+        NewsService.save($scope.newsEntry).then(function() {
             $location.path('/');
         });
-    };*/
+    };
 };
 
 

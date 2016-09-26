@@ -66,9 +66,6 @@ public class NewsEntryResource
 	}
 
 
-	//@POST
-	//@Produces(MediaType.APPLICATION_JSON)
-	//@Consumes(MediaType.APPLICATION_JSON)
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
 	public NewsEntry create(@RequestBody NewsEntry newsEntry)
@@ -79,10 +76,6 @@ public class NewsEntryResource
 	}
 
 
-	//@POST
-	//@Produces(MediaType.APPLICATION_JSON)
-	//@Consumes(MediaType.APPLICATION_JSON)
-	//@Path("{id}")
 	@RequestMapping(value = "{id}",method = RequestMethod.POST)
 	@ResponseBody
 	public NewsEntry update(/*@PathParam("id")*/ @PathVariable("id") Long id, @RequestBody NewsEntry newsEntry)
